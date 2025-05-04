@@ -5,6 +5,7 @@
         <form id="rankForm" method="POST" action="/submit-rankings">
           <div class="modal-header">
             <h5 class="modal-title" id="modalArtistName">Artist Name</h5>
+            <input type="hidden" name="artistName" id="artistName" value="">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -178,10 +179,10 @@
       var button = $(event.relatedTarget);
       var name = button.data('name');
       var image = button.data('image');
-  
       var modal = $(this);
       modal.find('#modalArtistName').text(name);
       modal.find('#modalArtistImage').attr('src', image);
+      modal.find('#artistName').val(name);
     });
   
     document.getElementById("rankForm").addEventListener("submit", function (e) {

@@ -57,11 +57,19 @@
             <% } %>
             <div class="card-body">
               <h5 class="card-title"><%= rows[i].name %></h5>
-              <a href="/rankArtist/<%= rows[i].artist_id %>" class="btn btn-primary btn-block">Rank This Artist</a>
+              <button type="button" 
+              class="btn btn-primary open-modal-btn" 
+              data-toggle="modal" 
+              data-target="#rankingModal"
+              data-name="<%= rows[i].name %>" 
+              data-image="<%= rows[i].image %>">
+              Rank Artist
+            </button>
             </div>
           </div>
         </div>
       <% } %>
+      <%- include("partials/rankModal.ejs") %>
     </div>
   </div>
 </body>

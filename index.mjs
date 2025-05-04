@@ -195,26 +195,36 @@ app.get('/logout', async(req, res) => {
 
 
 app.post('/login', async(req, res) => {
-   let username = req.body.username;
-    let password = req.body.password; 
-    let hashedPassword = "";
-
-    let sql = `SELECT * FROM users WHERE user_name = ?`
-
-    const [rows] = await conn.query(sql, [username]);
-    if(rows.length > 0){
-        hashedPassword = rows[0].password
-    }
-
-    if(hashedPassword == password ){
-        req.session.userAuth = true;
-        req.session.userId = rows[0].user_id
-        res.redirect('/')
-    }else{
-        res.render('login.ejs' , {"error": "Wrong credentials!"})
-    }
-
-});
+    let username = req.body.username;
+     let password = req.body.password; 
+     let hashedPassword = "";
+ 
+     let sql = `SELECT * FROM users WHERE user_name = ?`
+         // let sql = `SELECT * FROM users`
+ 
+       
+     const [rows] = await pool.query(sql, [username]);
+ 
+ 
+     console.log("USERS:");
+ 
+     console.log(rows);
+ 
+     if(rows.length > 0){
+         hashedPassword = rows[0].password
+     }
+ 
+     // const match = await bcrypt.compare(password, hashedPassword);
+     const match  =( password === hashedPassword)
+     if(match  ){
+         req.session.userAuth = true;
+         req.session.userId = rows[0].user_id
+         res.redirect('/')
+     }else{
+         res.render('login.ejs' , {"error": "Wrong credentials!"})
+     }
+ 
+ });
 
 app.post('/signup', async (req, res) => {
     const { username, password } = req.body;
@@ -647,8 +657,25 @@ app.post('/submit-rankings', isAuth,  async (req,res) =>{
         Replayability,
         Relevancy,
         rankArtistTraits,
-        rankRecommend
+        rankRecommend,
     } = req.body;
+    const name =  req.body.artistName;
+    console.log(name);
+    let artistId = await nameToId(name)
+
+    let checkSql = `SELECT 1 FROM artists WHERE artist_id = ?`;
+    const [checkRows] = await pool.query(checkSql, [artistId]);
+
+    if (checkRows.length === 0) {
+        console.log("Inserting new artist for ranking")
+        const [artistData] = await getArtistFromSpotify([artistId]);
+    
+        if (artistData) {
+            await pushArtistsToDb([artistData]);
+        } else {
+            console.error("Artist data not found from Spotify.");
+        }
+    }
 
     console.log("user info!!");
 
@@ -666,9 +693,10 @@ app.post('/submit-rankings', isAuth,  async (req,res) =>{
         Replayability,
         Relevancy,
         rank,
-        rankRecommend);
+        rankRecommend , artistId);
         // Once artistId can be passed or given the rankings can be inserted for all database tables 
-    // let artistId = "4oUHIQIBe0LHzYfvXNW4QM"
     let userId = req.session.userId
-    // await updateTotalRankings(artistId, userId, rankLyrics, Replayability, Relevancy, rank, rankRecommend);
+    await updateTotalRankings(artistId, userId, rankLyrics, Replayability, Relevancy, rank, rankRecommend);
+
+    res.redirect('/individualRankings');
 });
