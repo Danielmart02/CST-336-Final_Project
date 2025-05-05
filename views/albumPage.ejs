@@ -23,7 +23,15 @@
   <% for (let i = 0; i < albumInfo.artists.length; i++) { %>
     <a class= "albumInfoLink"  href="/artistPage/<%= albumInfo.artists[i].name %>">  Artist: <%= albumInfo.artists[i].name %></a>
 
-  <% } %> 
+  <% } %> <br>
+  <button type="button" 
+        class="btn btn-primary open-modal-btn" 
+        data-toggle="modal" 
+        data-target="#rankingModal"
+        data-name="<%= albumInfo.artists[0].name %>" 
+        data-image="<%= albumInfo.images[0].url %>">
+        Rank Artist
+      </button>
   <br>
   Release Date: <%= albumInfo.release_date %>
 
@@ -41,6 +49,6 @@
 <br>
 
 
-  
+<%- include("partials/rankModal.ejs") %>
 </body>
 </html>

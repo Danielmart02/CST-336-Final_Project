@@ -124,7 +124,7 @@ app.get('/artistPage', async (req, res) => {
 //this dynamically loads the artist page wit the artist the user clicks on
 app.get('/artistPage/:name', async (req, res) => {
     let targetArtist = req.params.name;
-   
+    
     let targetArtistId = await nameToId(targetArtist);
     
     //.getArtsitAlbums is from the npm/api
@@ -134,9 +134,10 @@ app.get('/artistPage/:name', async (req, res) => {
     // console.log(data);
     let albumsArray = data.body.items;
     // console.log(albumsArray);
-
+    let artistImage = albumsArray[0]?.images[0]?.url||'';
     // console.log(albumsArray);
-    res.render('artistPage.ejs', {albumsArray });
+    
+    res.render('artistPage.ejs', {albumsArray,targetArtist,artistImage});
   });
 
 //harcoded albbum to allow for page to load without user input
