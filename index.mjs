@@ -198,6 +198,10 @@ app.get('/logout', async(req, res) => {
 app.post('/login', async(req, res) => {
     let username = req.body.username;
      let password = req.body.password; 
+
+     if (!username || !password) {
+        return res.render('login.ejs', { error: 'Username and password are required!' });
+    }
      let hashedPassword = "";
  
      let sql = `SELECT * FROM users WHERE user_name = ?`
