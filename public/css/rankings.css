@@ -1,0 +1,19 @@
+body {
+    background-color: #121212; 
+    color: #ffffff; 
+  }
+  .card {
+    background-color: #1e1e1e; 
+    border: none;
+  }
+  .card-title, .card-text {
+    color: #ffffff; 
+  }
+  .card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  .container {
+    margin-top: 50px;
+  }
