@@ -77,7 +77,7 @@ app.get('/', async (req, res) => {
 
   app.get('/otterRankings', async (req, res) => {
     //use the fucntion below for query to get all our rankings
-    let rows = await getAllDbRankings();
+    let rows = await getOrderedDbRankings();
     console.log(rows);
     //TODO: get the array from the funciton above and pass to the view
     res.render("otterRankings.ejs", {rows});
@@ -463,6 +463,19 @@ async function getAllDbRankings(){
 
 }
 
+async function getOrderedDbRankings(){
+
+    let sql = `SELECT * 
+                FROM total_rankings AS o 
+                LEFT JOIN artists AS a ON a.artist_id = o.artist_id
+                WHERE o.overall IS NOT NULL
+                ORDER BY o.overall DESC`;
+    
+    const [rows] = await conn.query(sql);
+    return rows;
+
+}
+
 
 //This will pull all rankings from a specific user into an array
     //we use sql to query the user_rankings table and mathc it to the user id
@@ -475,7 +488,8 @@ async function getUsersRankings(userId){
     let sql = `SELECT a.name AS artist_name, a.image, u.overall, u.val1, u.val2, u.val3 , u.val4 , u.val5
                FROM user_rankings AS u
                JOIN artists AS a ON u.artist_id = a.artist_id
-               WHERE u.user_id = ?`;
+               WHERE u.user_id = ?
+               ORDER BY u.overall DESC`;
 
     const [rows] = await conn.query(sql, [userId]);
     return rows;
