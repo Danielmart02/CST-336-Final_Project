@@ -74,7 +74,12 @@ h1 {
   border: 2px solid #444;
   margin-bottom: 10px;
 }
-
+#albumCoverImg2 {
+  width: 40%; /* fills width of parent */
+  height: auto;
+  border: 2px solid #444;
+  margin-bottom: 10px;
+}
 /* TITLES AND LINKS */
 .titles {
   display: block; /* links wrap full width */
