@@ -124,7 +124,7 @@ app.get('/artistPage', async (req, res) => {
 //this dynamically loads the artist page wit the artist the user clicks on
 app.get('/artistPage/:name', async (req, res) => {
     let targetArtist = req.params.name;
-   
+    
     let targetArtistId = await nameToId(targetArtist);
     
     //.getArtsitAlbums is from the npm/api
@@ -134,9 +134,10 @@ app.get('/artistPage/:name', async (req, res) => {
     // console.log(data);
     let albumsArray = data.body.items;
     // console.log(albumsArray);
-
+    let artistImage = albumsArray[0]?.images[0]?.url||'';
     // console.log(albumsArray);
-    res.render('artistPage.ejs', {albumsArray });
+    
+    res.render('artistPage.ejs', {albumsArray,targetArtist,artistImage});
   });
 
 //harcoded albbum to allow for page to load without user input
@@ -197,6 +198,10 @@ app.get('/logout', async(req, res) => {
 app.post('/login', async(req, res) => {
     let username = req.body.username;
      let password = req.body.password; 
+
+     if (!username || !password) {
+        return res.render('login.ejs', { error: 'Username and password are required!' });
+    }
      let hashedPassword = "";
  
      let sql = `SELECT * FROM users WHERE user_name = ?`
