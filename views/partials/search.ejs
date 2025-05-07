@@ -1,10 +1,16 @@
-<div class="d-flex justify-content-center mt-3">
-    <form class="search-form form-inline" action="/searchArtist">
-        <input name="searchArtist" type="text" class="form-control mr-2" placeholder="Search for an artist disc">
-        <button class="metallo-btn" type="submit">Search Artist</button>
-    </form>
-</div>
 
+</head>
+<body>
+    <div class="d-flex justify-content-center mt-3">
+        <form class="search-form form-inline" action="/searchArtist" onsubmit="return validateSearch()">
+            <input id="searchArtistInput" name="searchArtist" type="text" class="form-control mr-2" placeholder="Search for an artist disc">
+            <button class="metallo-btn" type="submit">Search Artist</button>
+        </form>
+    </div>
+
+    <script src="/js/search.js"></script>
+</body>
+</html>
     <!-- <div>
         <form class="search" action="/searchArtist">
             <input name="searchArtist" type="text" placeholder="Search for an artists disc">
