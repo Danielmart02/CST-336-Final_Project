@@ -219,8 +219,7 @@ app.post('/login', async(req, res) => {
          hashedPassword = rows[0].password
      }
  
-     // const match = await bcrypt.compare(password, hashedPassword);
-     const match  =( password === hashedPassword)
+     const match = await bcrypt.compare(password, hashedPassword);
      if(match  ){
          req.session.userAuth = true;
          req.session.userId = rows[0].user_id
@@ -242,8 +241,11 @@ app.post('/signup', async (req, res) => {
             return res.render('signup.ejs', { error: 'Username already exists' });
         }
 
+          const saltRounds = 10; 
+          const hashedPassword = await bcrypt.hash(password, saltRounds);
+
         let  insertUserSql = `INSERT INTO users (user_name, password) VALUES (?, ?)`;
-        await conn.query(insertUserSql, [username, password]);
+        await conn.query(insertUserSql, [username, hashedPassword]);
 
         res.redirect('/login');
     } catch (error) {
